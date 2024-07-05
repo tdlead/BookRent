@@ -1,6 +1,6 @@
 {% load static tailwind_tags %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="{% if request.session.is_dark_mode %}dark{% endif %}">
 	<head>
     <title>Django Tailwind | {% block title %}{% endblock title %}</title>
 		<meta charset="UTF-8">
@@ -13,6 +13,8 @@
 		<div class="grid grid-cols-12">
 			<div class="col-span-6">
 				<div class="pt-10 px-6 bg-red-400 h-screen">
+					<a href="{% url 'switch' %}">switch mode</a>
+					<br>
 					{% block content %}
 					{% endblock content %}
 				</div>
