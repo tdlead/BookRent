@@ -24,7 +24,8 @@ from .views import home_view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_view),
-    path('books/', include('books.urls', namespace='books'))
+    path('books/', include('books.urls', namespace='books')),
+    path("__reload__/", include("django_browser_reload.urls")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT )
