@@ -2,11 +2,31 @@ from django.shortcuts import render
 
 from .models import BookTitle
 
+from django.views.generic import ListView
 # Create your views here.
 
-def book_title_list_view(request):
-    books = BookTitle.objects.all()
-    return render(request,'books/main.html', {'books' : books})
+# def book_title_list_view(request):
+#     books = BookTitle.objects.all()
+#     return render(request,'books/main.html', {'books' : books})
+
+class BookTitleListView(ListView):
+    # we have defaults, and one of the defaults is template name
+    # will look for template which is mode
+    model=BookTitle
+    # Overrite the query set 
+    # queryset = BookTitle.objects.all().order_by('-created')
+    
+    #ordering = ('-created')
+
+    template_name='books/main.html'
+    context_object_name = 'books'
+    # model_list.html -> booktitle_list.html 
+    # object_list
+
+    def get_queryset(self):
+        parameter = 's'
+        return BookTitle.objects.filter(title__startswith=parameter)
+
 
 def book_title_detail_view(request, pk):
     book_details = BookTitle.objects.get(pk=pk)
