@@ -6,11 +6,9 @@
 <h1> Book Titles: </h1>
 
     <form action="" method="POST">
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }} <!-- Renders the form fields wrapped in <p> tags -->
-            <button type="submit">Submit</button>
-        </form>
+        {% csrf_token %}
+        {{ form.as_p }} <!-- Renders the form fields wrapped in <p> tags -->
+        <button type="submit" class='p-3 bg-blue-500 text-white'>Submit</button>
     </form>
 
 

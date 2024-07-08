@@ -7,7 +7,7 @@ from django.views.generic import ListView
 from django.views.generic import FormView
 from .forms import BookTitleForm
 
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 # Create your views here.
 
 # def book_title_list_view(request):
@@ -23,10 +23,24 @@ class BookTitleListView(ListView,FormView):
     #ordering = ('-created')
     template_name='books/main.html'
     context_object_name = 'books'
+
+    #forms
     form_class = BookTitleForm
+    success_url = reverse_lazy("books:main")
     
     # model_list.html -> booktitle_list.html 
     # object_list
+
+    def form_valid(self,form):
+        form.save()
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        self.object_list = self.get_queryset()
+        return super().form_invalid(form)
+    
+    def get_success_url(self):
+        return self.request.path
 
     def get_queryset(self):
         parameter = 's'
