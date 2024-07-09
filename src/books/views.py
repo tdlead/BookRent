@@ -8,6 +8,9 @@ from django.views.generic import FormView
 from .forms import BookTitleForm
 
 from django.urls import reverse_lazy, reverse
+
+
+from django.contrib import messages
 # Create your views here.
 
 # def book_title_list_view(request):
@@ -28,15 +31,18 @@ class BookTitleListView(ListView,FormView):
     form_class = BookTitleForm
     success_url = reverse_lazy("books:main")
     
+    i_instance = None
     # model_list.html -> booktitle_list.html 
     # object_list
 
     def form_valid(self,form):
-        form.save()
+        self.i_instance=form.save()
+        messages.add_message(self.request, messages.INFO, f"Book title: {self.i_instance.title} has been created")
         return super().form_valid(form)
     
     def form_invalid(self, form):
         self.object_list = self.get_queryset()
+        messages.add_message(self.request, messages.ERROR, form.errors)
         return super().form_invalid(form)
     
     def get_success_url(self):

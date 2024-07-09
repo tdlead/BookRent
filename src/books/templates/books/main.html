@@ -1,13 +1,39 @@
 {% extends "base.html" %}
-
+{% load widget_tweaks %}
 {% block title %} book title list {% endblock title %}
 
 {% block content %}
 <h1> Book Titles: </h1>
 
+    {% if messages %}
+        {% for message in messages %}
+            {% if 'info' in message.tags %}
+                {% include "components/alert.html" with is_info=True title="Success" body=message %}
+            {% elif 'error' in message.tags %}
+                {% include "components/alert.html" with is_info=False title="Error" body=message %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
     <form action="" method="POST">
         {% csrf_token %}
-        {{ form.as_p }} <!-- Renders the form fields wrapped in <p> tags -->
+
+        {% comment %} {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+                <div class='font-bold text-red-500'>{{error}}</div>
+            {% endfor %}
+        {% endif %} {% endcomment %}
+        {% for field in form %} 
+            <div class="mb-4"> 
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ field.id_for_label }}">{{ field.label }}</label> 
+                {% render_field field class="bg-slate-100 dark:bg-slate-300 text-slate-800 rounded-lg p-3 drop-shadow-xl w-full" %} 
+                {% if field.errors %}
+                {% for  error in  field.errors %}
+                    <div class='my-1 text-red-500 font-boold text-sm'>{{error}}</div>
+                {% endfor %}
+            {% endif %}
+            </div>
+        {% endfor %}
+       <br>
         <button type="submit" class='p-3 bg-blue-500 text-white'>Submit</button>
     </form>
 

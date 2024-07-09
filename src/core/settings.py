@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'import_export',
     'tailwind',
     'theme',
-    'django_browser_reload'
+    'django_browser_reload',
+    'widget_tweaks',
 ]
 TAILWIND_APP_NAME = 'theme'
 
