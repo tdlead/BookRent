@@ -11,6 +11,9 @@ from django.urls import reverse_lazy, reverse
 
 
 from django.contrib import messages
+
+
+import string
 # Create your views here.
 
 # def book_title_list_view(request):
@@ -49,8 +52,16 @@ class BookTitleListView(ListView,FormView):
         return self.request.path
 
     def get_queryset(self):
-        parameter = 's'
+        parameter=self.kwargs.get('letter') if self.kwargs.get('letter')!=None else 'a'
+        print(f'parameter: {parameter}')
         return BookTitle.objects.filter(title__startswith=parameter)
+    
+    # Create context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data( **kwargs)
+        context['letters'] = list(string.ascii_uppercase)
+        context['selected_letter'] = self.kwargs.get('letter') if self.kwargs.get('letter')!=None else 'a'
+        return context
 
 
 def book_title_detail_view(request, pk):

@@ -3,8 +3,7 @@
 {% block title %} book title list {% endblock title %}
 
 {% block content %}
-<h1> Book Titles: </h1>
-
+<!-- ALERT MESSAGES -->
     {% if messages %}
         {% for message in messages %}
             {% if 'info' in message.tags %}
@@ -14,6 +13,18 @@
             {% endif %}
         {% endfor %}
     {% endif %}
+
+<!-- HEADER -->
+    {% include "components/header.html" with title="Books" description="List of all the book titles available"%}
+
+<!-- LETTERS -->
+{% for letter in letters  %}
+    <a href="{% url 'books:main' letter|lower %}" class="pr-1 {% if letter == selected_letter|upper %} underline {% endif %}"> {{letter}}
+    </a>
+{% endfor %}
+
+<!-- FORM -->
+
     <form action="" method="POST">
         {% csrf_token %}
 
