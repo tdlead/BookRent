@@ -56,6 +56,14 @@ class Book(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    def get_absolute_url(self):
+        letter = self.title.title[:1].lower()
+        return reverse("books:detail-book", kwargs={"letter":letter,"slug": self.title.slug, "book_id":self.isbn})
+
+    def delete_object(self):
+        letter = self.title.title[:1].lower()
+        return reverse('books:delete-book', kwargs={'letter':letter,'slug': self.title.slug, 'book_id':self.isbn})
     
     def __str__(self) :
         return str(self.title)

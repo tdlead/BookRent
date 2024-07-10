@@ -1,11 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from .models import BookTitle, Book
 
 from django.views.generic import (
     ListView, 
     DetailView,
-    FormView)
+    FormView,
+    DeleteView)
 
 from django.views.generic import FormView
 from .forms import BookTitleForm
@@ -81,6 +82,38 @@ class BookListView(ListView):
 class BookTitleDetailView(DetailView):
     template_name = "books/detail.html"
     model=BookTitle
+
+class BookDetailView(DetailView):
+    model=Book
+    template_name="books/detail_book.html"
+
+    def get_object(self):
+        id = self.kwargs.get('book_id')
+        #obj = Book.objects.get(isbn = id)
+        obj = get_object_or_404(Book, isbn=id)
+        return obj
+    
+
+class BookDeleteView(DeleteView):
+    model=Book
+    template_name = 'books/confirm_delete.html'
+
+    def get_object(self):
+        id = self.kwargs.get('book_id')
+        #obj = Book.objects.get(isbn = id)
+        obj = get_object_or_404(Book, isbn=id)
+        return obj
+    
+    def get_success_url(self):
+        letter = self.kwargs.get('letter')
+        slug = self.kwargs.get('slug')
+        #return to this url after deleting
+        return reverse('books:detail', kwargs={'letter':letter, 'slug': slug})
+    
+    def delete_object(self):
+        letter = self.title.title[:1].lower()
+        print(letter)
+        return reverse('books:delete-book', kwargs={'letter':letter,'slug': self.title.slug, 'book_id':self.isbn})
 
 # def book_title_detail_view(request, **kwargs):
 #     slug = kwargs.get('slug')

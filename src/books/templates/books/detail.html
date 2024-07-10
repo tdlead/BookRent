@@ -43,28 +43,28 @@
         {% for obj in object.books %}
         <tr class="border-b dark:bg-gray-800 dark:border-gray-700 {% if not obj.is_read  %}font-bold{% endif %}">
             <td scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                
+                {{forloop.counter}}
             </td>
             <td class="py-4 px-6">
                 {{obj.title}}
             </td>
             <td class="py-4 px-6">
-                
+                {{obj.isbn}}
             </td>
             <td class="py-4 px-6">
- 
+                <img src="{{obj.qr_code.url}}" alt="{{obj.isbn}}" class="h-12 w-12 rounded">
             </td>
             <td class="py-4 px-6">
- 
+                {{obj.status}}
             </td>
             <td class="py-4 px-6">
- 
+                available
             </td>
             <td class="py-4 px-6">
- 
+                <a href='{{obj.get_absolute_url}}'>click here</a>
             </td>
             <td class="py-4 px-6">
- 
+                <a href='{{obj.delete_object}}'>delete</a>
             </td>
         </tr>
         {% endfor %}
