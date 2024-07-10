@@ -9,6 +9,11 @@
                 <button class='bg-transparent border-2 text-white hover:bg-white hover:text-slate-900 hover:border-white p-3 rounded-xl text-xl ' id="open-modal-btn">{{icon}}</button>
             </div>
         {% endif %}
+        {% if is_go_back %}
+        <div>
+            <button class='bg-transparent border-2 text-white hover:bg-white hover:text-slate-900 hover:border-white p-3 rounded-xl text-xl ' id="go-back-btn">{{icon}}</button>
+        </div>
+    {% endif %}
     </div>
 
 </div>

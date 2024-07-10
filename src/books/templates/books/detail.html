@@ -4,13 +4,72 @@
 
 {% block content %}
 
-this is a detail view
-<hr>
+{% include 'components/header.html' with title=object.title description="Book Title details" is_go_back=True icon='<i class="fa-solid fa-left-long"></i>'%}
 
-{% for obj in object.books%} 
+{% comment %} {% for obj in object.books%} 
     <div>{{obj.title}}-{{obj.isbn}}</div>
-{% endfor %}
+{% endfor %} {% endcomment %}
 
+<table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+    <thead class="text-xs text-gray-700 uppercase dark:bg-gray-700 dark:text-gray-400">
+        <tr class="border">
+            <th scope="col" class="py-3 px-6">
+                #
+            </th>
+            <th scope="col" class="py-3 px-6">
+                title
+            </th>
+            <th scope="col" class="py-3 px-6">
+                book id
+            </th>
+            <th scope="col" class="py-3 px-6">
+                qr code
+            </th>
+            <th scope="col" class="py-3 px-6">
+                status
+            </th>
+            <th scope="col" class="py-3 px-6">
+                available
+            </th>
+            <th scope="col" class="py-3 px-6">
+                select
+            </th>
+            <th scope="col" class="py-3 px-6">
+                delete
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for obj in object.books %}
+        <tr class="border-b dark:bg-gray-800 dark:border-gray-700 {% if not obj.is_read  %}font-bold{% endif %}">
+            <td scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                
+            </td>
+            <td class="py-4 px-6">
+                {{obj.title}}
+            </td>
+            <td class="py-4 px-6">
+                
+            </td>
+            <td class="py-4 px-6">
+ 
+            </td>
+            <td class="py-4 px-6">
+ 
+            </td>
+            <td class="py-4 px-6">
+ 
+            </td>
+            <td class="py-4 px-6">
+ 
+            </td>
+            <td class="py-4 px-6">
+ 
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 {% comment %} 
 {% if is_paginated %}
