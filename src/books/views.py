@@ -110,10 +110,7 @@ class BookDeleteView(DeleteView):
         #return to this url after deleting
         return reverse('books:detail', kwargs={'letter':letter, 'slug': slug})
     
-    def delete_object(self):
-        letter = self.title.title[:1].lower()
-        print(letter)
-        return reverse('books:delete-book', kwargs={'letter':letter,'slug': self.title.slug, 'book_id':self.isbn})
+
 
 # def book_title_detail_view(request, **kwargs):
 #     slug = kwargs.get('slug')
