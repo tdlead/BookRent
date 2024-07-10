@@ -4,7 +4,11 @@
         <div class='text-md'>{{description}}</div>
     </div>
     <div>
-        {% comment %} buttons here  {% endcomment %}
+        {% if is_form_available %}
+            <div>
+                <button class='bg-transparent border-2 text-white hover:bg-white hover:text-slate-900 hover:border-white p-3 rounded-xl text-xl ' id="open-modal-btn">{{icon}}</button>
+            </div>
+        {% endif %}
     </div>
 
 </div>

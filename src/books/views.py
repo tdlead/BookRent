@@ -1,8 +1,11 @@
 from django.shortcuts import render
 
-from .models import BookTitle
+from .models import BookTitle, Book
 
-from django.views.generic import ListView
+from django.views.generic import (
+    ListView, 
+    DetailView,
+    FormView)
 
 from django.views.generic import FormView
 from .forms import BookTitleForm
@@ -63,10 +66,26 @@ class BookTitleListView(ListView,FormView):
         context['selected_letter'] = self.kwargs.get('letter') if self.kwargs.get('letter')!=None else 'a'
         return context
 
+        
+# OPTION 1 - BOOK LIST VIEW + overriding get_queryset 
+class BookListView(ListView):
+    template_name='books/detail.html'
+    paginate_by = 2
 
-def book_title_detail_view(request, pk):
-    book_details = BookTitle.objects.get(pk=pk)
-    return render(request, 'books/detail.html', {'book_details':book_details})
+    def get_queryset(self):
+        title_slug = self.kwargs.get('slug')
+        # title - foreign key then slug attr __
+        return Book.objects.filter(title__slug=title_slug)
+    
+# OPTION 2 BOOKTITLE DETIAL VIEW + model method
+class BookTitleDetailView(DetailView):
+    template_name = "books/detail.html"
+    model=BookTitle
+
+# def book_title_detail_view(request, **kwargs):
+#     slug = kwargs.get('slug')
+#     book_details = BookTitle.objects.get(slug=slug)
+#     return render(request, 'books/detail.html', {'book_details':book_details})
 
 
 """ with slug

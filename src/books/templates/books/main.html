@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 {% load widget_tweaks %}
+{% load static %}
+
+{% block scripts %}
+    <script src='{% static "books/main.js" %}' defer></script>
+    <script src='{% static "js/form_modal.js" %}' defer></script>
+{% endblock scripts %}
+
 {% block title %} book title list {% endblock title %}
 
 {% block content %}
@@ -15,47 +22,74 @@
     {% endif %}
 
 <!-- HEADER -->
-    {% include "components/header.html" with title="Books" description="List of all the book titles available"%}
+    {% include "components/header.html" with title="Books" description="List of all the book titles available" is_form_available=True icon="<i class='fa-solid fa-plus'></i>"%}
 
 <!-- LETTERS -->
-{% for letter in letters  %}
-    <a href="{% url 'books:main' letter|lower %}" class="pr-1 {% if letter == selected_letter|upper %} underline {% endif %}"> {{letter}}
-    </a>
-{% endfor %}
 
-<!-- FORM -->
+    {% for letter in letters  %}
+        <a href="{% url 'books:main' letter|lower %}" class="pr-1 {% if letter == selected_letter|upper %} underline {% endif %}"> {{letter}}
+        </a>
+    {% endfor %}
 
-    <form action="" method="POST">
-        {% csrf_token %}
 
-        {% comment %} {% if form.non_field_errors %}
-            {% for error in form.non_field_errors %}
-                <div class='font-bold text-red-500'>{{error}}</div>
-            {% endfor %}
-        {% endif %} {% endcomment %}
-        {% for field in form %} 
-            <div class="mb-4"> 
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ field.id_for_label }}">{{ field.label }}</label> 
-                {% render_field field class="bg-slate-100 dark:bg-slate-300 text-slate-800 rounded-lg p-3 drop-shadow-xl w-full" %} 
-                {% if field.errors %}
-                {% for  error in  field.errors %}
-                    <div class='my-1 text-red-500 font-boold text-sm'>{{error}}</div>
-                {% endfor %}
-            {% endif %}
+
+    <!--
+    MODAL FORM
+    -->
+     <!-- form modal -->
+    <div class="hidden relative z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true" id="form-modal">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75"></div>
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center" id="backdrop">
+                <div class="relative transform overflow-hidden rounded-lg text-left shadow-xl transition-all my-8">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <div class="bg-white dark:text-white dark:bg-slate-300 pt-5 pb-4 px-8">
+                            <div class="mt-3 text-left">
+                                <h3 class="text-2xl font-medium leading-6 text-gray-900" id="modal-title">
+                                    add new book title
+                                </h3>
+                                <div class="mt-3">
+                                    {% for field in form %}
+                                        <div class="mb-4">
+                                            <label class="block text-gray-700 text-sm font-bold mb-2" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                            {% render_field field class="bg-slate-100 dark:bg-slate-300 text-slate-800 rounded-lg p-3 drop-shadow-xl w-full" %}
+                                            {% if field.errors %}
+                                                {% for  error in  field.errors %}
+                                                    <div class='my-1 text-red-500 font-boold text-sm'>{{error}}</div>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 dark:text-white dark:bg-slate-400 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+
+                            <button type="submit" class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                                save
+                            </button>
+
+                            <button type="button" id="cancel-btn" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 border border-red-600 rounded mr-3">
+                                cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        {% endfor %}
-       <br>
-        <button type="submit" class='p-3 bg-blue-500 text-white'>Submit</button>
-    </form>
-
+        </div>
+    </div>
 
     {% if books %}
-    <ul>
-    {% for book in books %}
-        <li><a href="{{book.get_absolute_url}}">{{book.title}}</a></li>
-    {% endfor %}
-    </ul>
+        <ul>
+            {% for book in books %}
+                <li><a href="{{book.get_absolute_url}}">{{book.title}}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div>No book titles started with <b>{{selected_letter|upper}}</b></div>
     {% endif %}
 
-    
+
 {% endblock content %}
