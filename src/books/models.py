@@ -3,6 +3,7 @@ import uuid
 from django.db import models
 from publishers.models import Publisher
 from authors.models import Author
+from rentals.choices import STATUS_CHOICES
 
 # qr code
 import qrcode
@@ -56,6 +57,22 @@ class Book(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+
+    @property
+    def status(self):
+        if len(self.rental_set.all()) > 0:
+            statuses = dict(STATUS_CHOICES)
+            return statuses[self.rental_set.first().status]
+        #there is no rentals then false
+        return False
+
+    @property 
+    def is_available(self):
+        if len(self.rental_set.all()) > 0:
+            status = self.rental_set.first().status
+            return True if status == '#1' else False
+        return True
 
     def get_absolute_url(self):
         letter = self.title.title[:1].lower()

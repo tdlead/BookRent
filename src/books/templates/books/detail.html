@@ -3,8 +3,17 @@
 {% block title %}Book Title Detail{% endblock title %}
 
 {% block content %}
+<!-- ALERT MESSAGES -->
+{% if messages %}
+{% for message in messages %}
+    {% if 'info' in message.tags %}
+        {% include "components/alert.html" with is_info=True title="Success" body=message %}
+    {% endif %}
+{% endfor %}
+{% endif %}
 
-{% include 'components/header.html' with title=object.title description="Book Title details" is_go_back=True icon='<i class="fa-solid fa-left-long"></i>'%}
+<!--GO BACK BUTTON-->
+{% include 'components/header.html' with title=object.title description="Book Title details" is_go_back=True previous_page=previous_page %}
 
 {% comment %} {% for obj in object.books%} 
     <div>{{obj.title}}-{{obj.isbn}}</div>
@@ -55,16 +64,26 @@
                 <img src="{{obj.qr_code.url}}" alt="{{obj.isbn}}" class="h-12 w-12 rounded">
             </td>
             <td class="py-4 px-6">
-                {{obj.status}}
+                {% if obj.status %}
+                {{obj.status}} 
+                {% else %}
+                never rented
+                {% endif %}
             </td>
             <td class="py-4 px-6">
-                available
+
+                {% if obj.is_available %}
+                    <i class='fa-solid fa-check  text-green-500'></i>
+                {% else %}
+                    <i class='fa-solid fa-x  text-red-500'></i>
+                {% endif %}
+                
             </td>
             <td class="py-4 px-6">
-                <a href='{{obj.get_absolute_url}}'>click here</a>
+                {% include "components/button/select_button.html" with href=obj.get_absolute_url %}
             </td>
             <td class="py-4 px-6">
-                <a href='{{obj.delete_object}}'>delete</a>
+                {% include "components/button/delete_button.html" with href=obj.delete_object %}
             </td>
         </tr>
         {% endfor %}

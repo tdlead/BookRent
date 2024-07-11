@@ -1,18 +1,12 @@
 from django.db import models
-from books.models import Book
 from customers.models import Customer
 from datetime import timedelta
+from .choices import STATUS_CHOICES
 
-STATUS_CHOICES = (
-    ('#0','rented'),
-    ('#1','returned'),
-    ('#2','lost'),
-    ('#3','delayed'),
-)
 
 # Create your models here.
 class Rental(models.Model):
-    book = models.ForeignKey(Book, on_delete = models.CASCADE)
+    book = models.ForeignKey('books.Book', on_delete = models.CASCADE)
     customer = models.ForeignKey(Customer, on_delete = models.CASCADE)
     # field with choices
     status = models.CharField(max_length=2, choices=STATUS_CHOICES)

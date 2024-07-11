@@ -83,6 +83,12 @@ class BookTitleDetailView(DetailView):
     template_name = "books/detail.html"
     model=BookTitle
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["previous_page"] = reverse('books:main') 
+        return context
+        
+
 class BookDetailView(DetailView):
     model=Book
     template_name="books/detail_book.html"
@@ -105,6 +111,7 @@ class BookDeleteView(DeleteView):
         return obj
     
     def get_success_url(self):
+        messages.add_message(self.request, messages.INFO, f"The book with isbn {self.get_object().isbn} has been deleted")
         letter = self.kwargs.get('letter')
         slug = self.kwargs.get('slug')
         #return to this url after deleting
