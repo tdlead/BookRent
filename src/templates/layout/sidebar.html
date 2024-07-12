@@ -1,5 +1,6 @@
 {% url "home" as path_to_home %}
 {% url "books:main" as path_to_books %}
+{% url "rentals:main" as path_to_rentals %}
 
 <aside class="hidden md:block sticky bg-slate-900 h-screen text-white w-full pt-24 text-sm">
     <ul>
@@ -10,9 +11,19 @@
             </a>
         </li>
         <li class="mb-6 mx-auto">
-            <a href="{{path_to_books}}" class="grid h-12 place-items-center cursor-pointer hover:text-slate-200 duration-300 text-slate-500">
+            <a href="{{path_to_books}}" class="grid h-12 place-items-center cursor-pointer
+             hover:text-slate-200 duration-300 text-slate-500
+             {% if request.resolver_match.view_name|slice:'0:5' == 'books' %}text-white{% endif %}">
                 <i class="fa-solid fa-book fa-xl"></i>
                 <p>books</p>
+            </a>
+        </li>
+        <li class="mb-6 mx-auto">
+            <a href="{{path_to_rentals}}" class="grid h-12 place-items-center cursor-pointer hover:text-slate-200 duration-300 text-slate-500
+            {% if request.resolver_match.view_name|slice:'0:7' == 'rentals' %}text-white{% endif %}
+            ">
+                <i class="fa-solid fa-bookmark fa-xl"></i>
+                <p>rentals</p>
             </a>
         </li>
     </ul>

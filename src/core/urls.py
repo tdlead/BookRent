@@ -26,6 +26,7 @@ urlpatterns = [
     path('', home_view, name='home'),
     path('switch/', change_theme, name='switch'),
     path('books/', include('books.urls', namespace='books')),
+    path('rentals/', include('rentals.urls', namespace='rentals')),
     path("__reload__/", include("django_browser_reload.urls")),
 ]
 
