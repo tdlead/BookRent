@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Download rentals{% endblock title %}
+{% block content %}
+{% include 'components/header.html' with title="Download data" description=book_id is_go_back=True%}
+<form method="POST" >
+    {% csrf_token %}
+    {{form}}
+    <button type='submit' class='px-3 py-2 text-white bg-sky-500 hover:bg-sky-600 rounded-xl mt-3'>Download</button>
+</form>
+{% endblock content %}

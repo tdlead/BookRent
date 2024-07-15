@@ -79,7 +79,11 @@
             {% endfor %}
         </tbody>
     </table>
-{% else %}
+</div>
+<div class='mt-6 h-12' >
+    <a href="{% url 'rentals:download' book_id %}" class='p-3 bg-sky-500 hover:bg-sky-600 rounded-lg text-white'>download</a>   
+</div>
+    {% else %}
 No rentals for this book yet
 {% endif %}
 {% endblock content %}

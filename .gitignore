@@ -1,10 +1,12 @@
 /br-env
+**/media
+# Ignore the SQLite database file
+**/db.sqlite3
 *.log
 *.pot
 *.pyc
 **/*.pyc
 __pycache__/
 **/__pycache__/
-src/db.sqlite3
 # Ignore node_modules directory
 node_modules/
