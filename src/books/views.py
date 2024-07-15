@@ -96,7 +96,7 @@ class BookDetailView(DetailView):
     def get_object(self):
         id = self.kwargs.get('book_id')
         #obj = Book.objects.get(isbn = id)
-        obj = get_object_or_404(Book, isbn=id)
+        obj = get_object_or_404(Book, id=id)
         return obj
     
 
@@ -107,11 +107,11 @@ class BookDeleteView(DeleteView):
     def get_object(self):
         id = self.kwargs.get('book_id')
         #obj = Book.objects.get(isbn = id)
-        obj = get_object_or_404(Book, isbn=id)
+        obj = get_object_or_404(Book, id=id)
         return obj
     
     def get_success_url(self):
-        messages.add_message(self.request, messages.INFO, f"The book with isbn {self.get_object().isbn} has been deleted")
+        messages.add_message(self.request, messages.INFO, f"The book with id {self.get_object().id} has been deleted")
         letter = self.kwargs.get('letter')
         slug = self.kwargs.get('slug')
         #return to this url after deleting

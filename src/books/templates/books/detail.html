@@ -18,7 +18,7 @@
 {% comment %} {% for obj in object.books%} 
     <div>{{obj.title}}-{{obj.isbn}}</div>
 {% endfor %} {% endcomment %}
-
+<div class='overflow-x-auto'>
 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
     <thead class="text-xs text-gray-700 uppercase dark:bg-gray-700 dark:text-gray-400">
         <tr class="border">
@@ -30,6 +30,9 @@
             </th>
             <th scope="col" class="py-3 px-6">
                 book id
+            </th>
+            <th scope="col" class="py-3 px-6">
+                isbn
             </th>
             <th scope="col" class="py-3 px-6">
                 qr code
@@ -56,6 +59,9 @@
             </td>
             <td class="py-4 px-6">
                 {{obj.title}}
+            </td>
+            <td class="py-4 px-6">
+                {{obj.id}}
             </td>
             <td class="py-4 px-6">
                 {{obj.isbn}}
@@ -89,7 +95,7 @@
         {% endfor %}
     </tbody>
 </table>
-
+</div>
 {% comment %} 
 {% if is_paginated %}
     <div class="mt-3">

@@ -4,6 +4,7 @@ from django.db import models
 from publishers.models import Publisher
 from authors.models import Author
 from rentals.choices import STATUS_CHOICES
+from .utils import hash_book_info
 
 # qr code
 import qrcode
@@ -47,8 +48,9 @@ class BookTitle(models.Model):
 
 
 class Book(models.Model):
+    id = models.CharField(primary_key=True, max_length=36, default=uuid.uuid4, editable=False)
     title = models.ForeignKey(BookTitle, on_delete=models.CASCADE)
-    isbn = models.CharField(max_length=24, blank=True, unique=True)
+    isbn = models.CharField(max_length=64, blank=True)
     #qr_code
     # upload_to - where to save files
     # null - this field can be empty
@@ -66,6 +68,13 @@ class Book(models.Model):
             return statuses[self.rental_set.first().status]
         #there is no rentals then false
         return False
+    
+    @property
+    def rental_id(self):
+        if len(self.rental_set.all()) > 0:
+            return self.rental_set.first().id
+        #there is no rentals then false
+        return None
 
     @property 
     def is_available(self):
@@ -76,11 +85,11 @@ class Book(models.Model):
 
     def get_absolute_url(self):
         letter = self.title.title[:1].lower()
-        return reverse("books:detail-book", kwargs={"letter":letter,"slug": self.title.slug, "book_id":self.isbn})
+        return reverse("books:detail-book", kwargs={"letter":letter,"slug": self.title.slug, "book_id":self.id})
 
     def delete_object(self):
         letter = self.title.title[:1].lower()
-        return reverse('books:delete-book', kwargs={'letter':letter,'slug': self.title.slug, 'book_id':self.isbn})
+        return reverse('books:delete-book', kwargs={'letter':letter,'slug': self.title.slug, 'book_id':self.id})
     
     def __str__(self) :
         return str(self.title)
@@ -88,7 +97,7 @@ class Book(models.Model):
     def save(self, *args, **kwargs):
         # generate id
         if not self.isbn:
-            self.isbn = str(uuid.uuid4()).replace('-','')[:24].lower()
+            self.isbn = hash_book_info(self.title,self.title.publisher.name)
 
         # generate qr_code
         qrcode_image = qrcode.make(self.isbn)

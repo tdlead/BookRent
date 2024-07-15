@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="w-full bg-white dark:bg-slate-700 shadow p-3 rounded">
-    <h1 class="text-2xl font-bold mb-4">Are you sure you want to delete <b> {{object.isbn}} ?</h1>
+    <h1 class="text-2xl font-bold mb-4">Are you sure you want to delete <b> {{object.id}} ?</h1>
     <div class="mb-4">Deleting this item is permanent and can't be undone!</div>
     <form  method="POST">
         {% csrf_token %}

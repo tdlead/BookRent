@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load get_status_text %}
+{% block title %}Rental History{% endblock title %}
+
+{% block content %}
+{% include 'components/header.html' with title=book.title.title description=book.title.publisher is_go_back=True%}
+<!-- ALERT MESSAGES -->
+{% if messages %}
+{% for message in messages %}
+    {% if 'info' in message.tags %}
+        {% include "components/alert.html" with is_info=True title="Success" body=message %}
+    {% endif %}
+{% endfor %}
+{% endif %}
+{% if rentals %}
+<div class="overflow-x-auto"> 
+    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase dark:bg-gray-700 dark:text-gray-400">
+            <tr class="border">
+                <th scope="col" class="py-3 px-6">
+                    #
+                </th>
+                <th scope="col" class="py-3 px-6">
+                    customer
+                </th>
+                <th scope="col" class="py-3 px-6">
+                    isbn
+                </th>
+                <th scope="col" class="py-3 px-6">
+                    status
+                </th>
+                <th scope="col" class="py-3 px-6">
+                    start
+                </th>
+                <th scope="col" class="py-3 px-6">
+                    end
+                </th>
+                <th scope="col" class="py-3 px-6">
+                    return
+                </th>
+                <th scope="col" class="py-3 px-6">
+                    is closed
+                </th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for rental in rentals %}
+            <tr class="border-b dark:bg-gray-800 dark:border-gray-700">
+                <td scope="row" class="py-4 px-6 font-medium text-gray-900 dark:text-white">
+                    {{forloop.counter}}
+                </td>
+                <td class="py-4 px-6">
+                    {{rental.customer.username}}
+                </td>
+                <td class="py-4 px-6">
+                    {{rental.book.isbn}}
+                </td>
+                <td class="py-4 px-6">
+                    {{rental.status|get_status_text}}
+                </td>
+                <td class="py-4 px-6">
+                    {{rental.rent_start_date}}
+                </td>
+                <td class="py-4 px-6">
+                    {{rental.rent_end_date}}
+                </td>
+                <td class="py-4 px-6">
+                    {% if  rental.return_date%}{{rental.return_date}}{% else %}-{% endif %}
+                </td>
+                <td class="py-4 px-6">
+                    {% if  rental.is_closed%}
+                    <i class='fa-solid fa-check text-green-500'></i>
+                    {% else %}
+                    <i class='fa-solid fa-x text-rose-500'></i>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+No rentals for this book yet
+{% endif %}
+{% endblock content %}
+

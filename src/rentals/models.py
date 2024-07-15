@@ -2,11 +2,12 @@ from django.db import models
 from customers.models import Customer
 from datetime import timedelta
 from .choices import STATUS_CHOICES
+from books.models import Book
 
 
 # Create your models here.
 class Rental(models.Model):
-    book = models.ForeignKey('books.Book', on_delete = models.CASCADE)
+    book = models.ForeignKey(Book, on_delete = models.CASCADE)
     customer = models.ForeignKey(Customer, on_delete = models.CASCADE)
     # field with choices
     status = models.CharField(max_length=2, choices=STATUS_CHOICES)
@@ -17,6 +18,11 @@ class Rental(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    @property
+    def status_text(self):
+        status = dict(STATUS_CHOICES)
+        return status[self.status]
+    
     def __str__(self):
         return f"{self.book.isbn} rented by {self.customer.username}"
     
