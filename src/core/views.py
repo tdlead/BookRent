@@ -1,7 +1,13 @@
 from django.shortcuts import render
 from customers.models import Customer
 from books.models import Book, BookTitle
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
+from django.views.generic import TemplateView
+from django.db.models import Count,Sum
+
+from rentals.models import Rental
+from rentals.choices import STATUS_CHOICES
+from publishers.models import Publisher
 
 def change_theme(request):
     """
@@ -28,18 +34,69 @@ def change_theme(request):
         """
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+class DashboardView(TemplateView):
+    template_name = 'dashboard.html'
+
+def chart_data(request):
+    #qs = Book.objects.aggregate(Count('title'))
+    data = []
+
+    all_books = len(Book.objects.all())
+    all_book_titles = len(BookTitle.objects.all())
+    data.append(
+        {
+            'labels':['books','books titles'],
+            'data':[all_books,all_book_titles],
+            'description':'unique book title vs books',
+            'type':'bar'
+        }
+    )
+
+    titles_by_publisher = BookTitle.objects.values('publisher__name').annotate(Count('publisher__name'))
+
+    publisher_name = [x['publisher__name'] for x in titles_by_publisher]
+    publisher_name_count = [x['publisher__name__count'] for x in titles_by_publisher]
+    
+    
+    data.append({
+        'labels' : publisher_name,
+        'data':publisher_name_count,
+        'description':'book title count by publisher',
+        'type':'pie'
+    })
+
+
+    # book by status pie
+    book_by_status = Rental.objects.values('status').annotate(Count('book__title'))
+    book_title_count = [x['book__title__count'] for x in book_by_status]
+    status_keys = [x['status'] for x in book_by_status]
+    status = [dict(STATUS_CHOICES)[key] for key in status_keys]
+    
+    data.append({
+        'labels' : status,
+        'data':book_title_count,
+        'description':'book title count by status',
+        'type':'pie'
+    })
+
+    #publisher vs customers (bar)
+
+    customers = len(Customer.objects.all())
+    publishers = len(Publisher.objects.all())
+    data.append({
+        'labels' : ['customers', 'publishers'],
+        'data':[customers,publishers],
+        'description':'publisher vs customers count',
+        'type':'bar'
+    })
+
+    return JsonResponse({'data':data})
+
 def home_view(request):
     qs = Customer.objects.all()
-    # book = Book.objects.get(id=1)
     book = BookTitle.objects.get(id=1)
-    
-    # we want to retrieve all books associated with this book title related_name='books'
-    books = book.books
-
-    print(books)
     context = {
         'qs': qs, 
         'book': book
         }
-    
     return render(request, 'main.html', context )

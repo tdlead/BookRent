@@ -19,11 +19,13 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from .views import home_view, change_theme
+
+from .views import DashboardView, change_theme, chart_data
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', home_view, name='home'),
+    path('', DashboardView.as_view(), name='home'),
+    path('chart-data/', chart_data, name='data'),
     path('switch/', change_theme, name='switch'),
     path('books/', include('books.urls', namespace='books')),
     path('rentals/', include('rentals.urls', namespace='rentals')),
