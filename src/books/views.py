@@ -15,7 +15,7 @@ from django.urls import reverse_lazy, reverse
 
 
 from django.contrib import messages
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 import string
 # Create your views here.
@@ -24,7 +24,7 @@ import string
 #     books = BookTitle.objects.all()
 #     return render(request,'books/main.html', {'books' : books})
 
-class BookTitleListView(ListView,FormView):
+class BookTitleListView(LoginRequiredMixin,ListView,FormView):
     # we have defaults, and one of the defaults is template name
     # will look for template which is mode
     model=BookTitle
@@ -69,7 +69,7 @@ class BookTitleListView(ListView,FormView):
 
         
 # OPTION 1 - BOOK LIST VIEW + overriding get_queryset 
-class BookListView(ListView):
+class BookListView(LoginRequiredMixin, ListView):
     template_name='books/detail.html'
     paginate_by = 2
 
@@ -79,7 +79,7 @@ class BookListView(ListView):
         return Book.objects.filter(title__slug=title_slug)
     
 # OPTION 2 BOOKTITLE DETIAL VIEW + model method
-class BookTitleDetailView(DetailView):
+class BookTitleDetailView(LoginRequiredMixin, DetailView):
     template_name = "books/detail.html"
     model=BookTitle
 
@@ -89,7 +89,7 @@ class BookTitleDetailView(DetailView):
         return context
         
 
-class BookDetailView(DetailView):
+class BookDetailView(LoginRequiredMixin, DetailView):
     model=Book
     template_name="books/detail_book.html"
 
@@ -100,7 +100,7 @@ class BookDetailView(DetailView):
         return obj
     
 
-class BookDeleteView(DeleteView):
+class BookDeleteView(LoginRequiredMixin, DeleteView):
     model=Book
     template_name = 'books/confirm_delete.html'
 

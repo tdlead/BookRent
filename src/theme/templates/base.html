@@ -26,11 +26,16 @@
 	<body class="bg-gray-50 dark:bg-slate-800 dark:text-white">
 		{% include "layout/navbar.html" %}
 		<div class="grid grid-cols-12">
-			<div class="col-span-1">
+			{% if request.user.is_authenticated %}			
+				<div class="col-span-1">
 				{% include "layout/sidebar.html" %}
-			</div>
-			<div class="col-span-11">
+				{% endif %}
+				</div>
+
+
+			<div class="{% if request.user.is_authenticated %}col-span-11{% else %}col-span-12{% endif %}">
 				<div class="pt-16 px-6 mt-4 h-screen">
+					{% if request.user.is_authenticated %}	
 					<a href="{% url 'switch' %}" 
 					class="fixed top-[150px] right-0 p-3 
 					rounded-l-lg
@@ -43,6 +48,7 @@
 					<i class="fa-solid {% if request.session.is_dark_mode %}fa-sun{% else %}fa-moon{% endif %}">
 					</i>
 				    </a>
+					{% endif %}
 					{% block content %}
 					{% endblock content %}
 				</div>

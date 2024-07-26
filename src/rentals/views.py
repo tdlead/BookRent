@@ -14,7 +14,11 @@ from django.contrib import messages
 from django.http import HttpResponse
 from datetime import datetime
 
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 # Create your views here.
+@login_required
 def search_book_view (request):
     form= SearchBookForm(request.POST or None)
     search_query = request.POST.get('search', None)
@@ -28,7 +32,7 @@ def search_book_view (request):
     return render(request, 'rentals/main.html', context)
 
 
-class BookRentalView(ListView):
+class BookRentalView(LoginRequiredMixin, ListView):
     model=Rental
     context_object_name = 'rentals'
     template_name = 'rentals/detail.html'
@@ -46,7 +50,7 @@ class BookRentalView(ListView):
         context['book_id'] = book_id
         return context
     
-class UpdateRentalStatus(UpdateView):
+class UpdateRentalStatus(LoginRequiredMixin, UpdateView):
     model = Rental
     template_name = 'rentals/update.html'
     fields=('status',)
@@ -64,7 +68,7 @@ class UpdateRentalStatus(UpdateView):
         messages.add_message(self.request, messages.INFO, f'Status of book {instance.book_id} was successufully updated')
         return super().form_valid(form)
 
-class CreateNewRental(CreateView):
+class CreateNewRental(LoginRequiredMixin, CreateView):
     model = Rental
     template_name = 'rentals/new.html'
     fields = ('customer',)
@@ -82,7 +86,7 @@ class CreateNewRental(CreateView):
         book_id = self.kwargs.get('book_id')  # Get book_id for the success URL
         return reverse('rentals:detail', kwargs={'book_id': book_id})
     
-class SelectRentalDownloandView(FormView):
+class SelectRentalDownloandView(LoginRequiredMixin, FormView):
     template_name = 'rentals/download.html'
     form_class  = SelectExportOptions
 
